@@ -1,0 +1,21 @@
+.Canvas {
+  margin: 50px;
+}
+
+.Canvas .Tile {
+  height: 70px;
+  width: 70px;
+  margin-top: -1px;
+  margin-right: -1px;
+  border: 1px solid black;
+  align-self: center;
+  flex: 0 0 auto;
+}
+
+.Canvas .Tile.active {
+  border: 1px solid rgb(97, 221, 255);
+}
+
+.Canvas-tile-row {
+  display: flex;
+}

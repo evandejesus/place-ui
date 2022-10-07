@@ -1,0 +1,91 @@
+import React from 'react';
+import './index.css';
+import PropTypes from 'prop-types';
+import { SketchPicker } from 'react-color';
+
+const CANVAS_SIZE = 4;
+
+interface Color {
+  r: number;
+  b: number;
+  g: number;
+  a: number;
+}
+
+interface IProps {}
+
+interface IState {
+  pickerActive?: boolean;
+  tileMatrix: Color[][];
+}
+
+export default class Canvas extends React.Component<IProps, IState> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pickerActive: false,
+      tileMatrix: []
+    };
+  }
+  render() {
+    const pickerActive = this.state.pickerActive;
+    const picker = pickerActive ? <SketchPicker></SketchPicker> : <></>;
+
+    const tiles = this.state.tileMatrix;
+    for (let i = 0; i < CANVAS_SIZE; i++) {
+      const row: Color[] = [];
+      for (let j = 0; j < CANVAS_SIZE; j++) {
+        const color: Color = { r: 0, g: 0, b: 0, a: 0 };
+        row.push(color);
+      }
+      tiles.push(row);
+    }
+    return (
+      <div className="Canvas">
+        <div>{this.renderTiles(tiles)}</div>
+        {picker}
+      </div>
+    );
+  }
+
+  handleClick(row, column) {
+    console.log(row, column);
+    this.setState({ pickerActive: true });
+  }
+
+  renderTile(i, j) {
+    // return <Tile row={r} column={c} color={color} onClick={() => this.handleClick(r, c)}></Tile>;
+    const tile = this.state.tileMatrix[i][j];
+    return <Tile color={tile}></Tile>;
+  }
+
+  renderTiles(tiles: Color[][]) {
+    const output = [];
+    for (let i = 0; i < tiles.length; i++) {
+      const columns: JSX.Element[] = [];
+      for (let j = 0; j < tiles[i].length; j++) {
+        columns.push(<Tile color={tiles[i][j]} onClick={() => this.handleClick(i, j)}></Tile>);
+      }
+      const row = <div className="Tile-row"></div>;
+    }
+  }
+}
+
+function Tile({ color, onClick }) {
+  const style = {
+    background: `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
+  };
+  return <div className="Tile" style={style} onClick={onClick}></div>;
+}
+
+Tile.propTypes = {
+  color: PropTypes.shape({
+    r: PropTypes.number,
+    g: PropTypes.number,
+    b: PropTypes.number,
+    a: PropTypes.number
+  }),
+  row: PropTypes.number,
+  column: PropTypes.number,
+  onClick: PropTypes.func
+};
