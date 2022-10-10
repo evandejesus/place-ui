@@ -35,7 +35,6 @@ class Canvas extends React.Component {
         })
       )
     }));
-    console.log(color, event);
   }
 
   render() {
@@ -44,12 +43,14 @@ class Canvas extends React.Component {
     const tileRows = this.renderAllTiles(tiles);
     return (
       <div className="Canvas">
-        {tileRows}
-        {this.state.pickerIsActive ? (
-          <CompactPicker onChange={this.handleColorChange}></CompactPicker>
-        ) : (
-          <></>
-        )}
+        <div className="Canvas-flex">{tileRows}</div>
+        <div className="color-picker-container">
+          {this.state.pickerIsActive ? (
+            <CompactPicker onChange={this.handleColorChange}></CompactPicker>
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
     );
   }
@@ -74,12 +75,30 @@ class Canvas extends React.Component {
   }
 }
 
-const Tile = ({ color: { r, g, b, a }, onClick }) => {
-  const style = {
-    background: `rgba(${r}, ${g}, ${b}, ${a * 100})`
-  };
-  return <div className="Tile" style={style} onClick={onClick}></div>;
-};
+class Tile extends React.Component {
+  render() {
+    const { r, g, b, a } = this.props.color;
+    const { onClick } = this.props;
+    const baseCSS = {
+      height: '70px',
+      width: '70px',
+      marginTop: '-1px',
+      marginRight: '-1px',
+      border: '1px solid black',
+      alignSelf: 'center',
+      flex: '0 0 auto',
+      cursor: 'pointer'
+    };
+
+    const style = {
+      ...baseCSS,
+      ...{
+        background: `rgba(${r}, ${g}, ${b}, ${a * 100})`
+      }
+    };
+    return <div className="Tile" style={style} onClick={onClick}></div>;
+  }
+}
 
 Tile.propTypes = {
   color: PropTypes.shape({
